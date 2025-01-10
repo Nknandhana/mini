@@ -130,3 +130,11 @@ def logout(request):
     request.session.flush()
     messages.success(request, "You have been logged out!")
     return redirect('login')
+
+from django.shortcuts import render
+from .models import User  # Import your custom User model
+
+def user_list(request):
+    users = User.objects.all()  # Fetch all users from the database
+    return render(request, 'user_list.html', {'users': users})
+
