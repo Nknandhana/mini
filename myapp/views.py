@@ -60,13 +60,17 @@ def login(request):
                 request.session['role'] = role
                 request.session['semester'] = semester
                 messages.success(request, f"Welcome {user.username}!")
-                return redirect('user_list')  # Replace 'dashboard' with your desired redirect URL
+                return redirect('welcome')  # Replace 'dashboard' with your desired redirect URL
             else:
                 messages.error(request, "Invalid credentials!")
         except User.DoesNotExist:
             messages.error(request, "User does not exist!")
 
     return render(request, 'login.html')
+
+# welcome view
+def welcome_view(request):
+    return render(request, 'welcome.html')
 
 # Logout View
 def logout(request):

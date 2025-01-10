@@ -1,22 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome Page</title>
     <style>
+        /* Body styling */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 20%;
+            font-family: "Poppins", serif;
             background-color: #f4f4f9;
             color: #333;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Container for the content */
+        .container {
+            margin-left: 25%;
+            margin-top: 40px;
+            text-align: center;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            border: 1px solid #24405e;
+            /* Border around the entire container */
+        }
+
+        /* Header styling */
+
+        /* Logout button at the top-right corner */
+        .logout-btn {
+            background-color: #24405e;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: rgb(5, 26, 48);
+        }
+
+        /* Fade-in animation for the welcome text */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Options (Internal Mark, Message, etc.) */
+        .options {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .options a {
+            text-decoration: none;
+            display: block;
+            padding: 20px;
+            background-color: #24405e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .options a:hover {
+            background-color: #1b2d3f;
+            transform: translateY(-2px);
+        }
+
+        /* Styling for the links (Logout and others) */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .fade-in {
+            font-weight: 500;
+            font-size: 20px;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
-    <h1>Welcome!</h1>
-    <p>You have successfully logged in.</p>
-    <a href="logi.html"> </a>
+    <!-- Header Section with Logout Button -->
+    <div class="header">
+        <h1>Welcome!</h1>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <p class="fade-in">You have successfully logged in.</p>
+
+        <!-- Additional Options (Cards) -->
+        <div class="options">
+            <a href="#">Internal Mark</a> <!-- Replace with the correct URL -->
+            <a href="#">Message</a> <!-- Replace with the correct URL -->
+            <a href="#">Alert</a> <!-- Replace with the correct URL -->
+            <a href="#">Extras</a> <!-- Replace with the correct URL -->
+        </div>
+    </div>
 </body>
+
 </html>
