@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.contrib.sessions.backends.db import SessionStore
 from .models import User
+from django.http import HttpResponse
+
 
 
 
@@ -145,3 +147,90 @@ def user_list(request):
     users = User.objects.all()  # Fetch all users from the database
     return render(request, 'user_list.html', {'users': users})
 
+def internal_marks(request):
+    # Your logic here
+    return render(request, 'internal_marks.html')
+
+def messages_view(request):
+    # Logic to retrieve and display messages
+    return render(request, 'messages.html')
+
+def upload_notes(request):
+    if request.method == 'POST' and request.FILES['notes']:
+        notes_file = request.FILES['notes']
+        fs = FileSystemStorage()
+        filename = fs.save(notes_file.name, notes_file)
+        # You can do something with the filename if you need
+        return redirect('upload_success')  # Redirect to a success page after upload
+    
+    return render(request, 'upload_page.html')
+
+def upload_seminar_assignment(request):
+    if request.method == 'POST':
+        seminar_file = request.FILES.get('seminar')
+        assignment_file = request.FILES.get('assignment')
+        fs = FileSystemStorage()
+        
+        seminar_filename = fs.save(seminar_file.name, seminar_file)
+        assignment_filename = fs.save(assignment_file.name, assignment_file)
+        
+        # You can do something with the filenames if you need
+        return redirect('upload_success')  # Redirect to success page after upload
+    
+    return render(request, 'upload_page.html')
+
+def update_student_details(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        register_number = request.POST.get('register_number')
+        subject = request.POST.get('subject')
+        
+        # Process the data, save it to the database, or whatever is needed
+        # Assuming you have a Student model for saving the data
+        # student = Student.objects.create(name=name, register_number=register_number, subject=subject)
+        
+        return redirect('update_success')  # Redirect after successfully updating details
+
+    def messages_view(request):
+      return render(request, 'messages.html')
+    
+
+
+def internal_marks(request):
+    # Ensure the user is authenticated and has the correct role
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if user is not authenticated
+    
+    role = getattr(request.user, 'role', None)  # Get the user's role (faculty, student, etc.)
+    
+    # Fetch all marks
+    marks = Marks.objects.all()
+
+    # Preprocess the marks to calculate average and total marks
+    processed_marks = []
+    for mark in marks:
+        # Assuming sub1, sub2, sub3, sub4 are exam scores
+        subject_marks = [mark.sub1, mark.sub2, mark.sub3, mark.sub4]
+        subject_marks.sort(reverse=True)  # Sort the marks in descending order
+
+        # Calculate the average (highest 2 out of 4 marks)
+        average_mark = sum(subject_marks[:2]) / 2
+
+        # Calculate the total marks (subject marks + lab)
+        total_marks = sum(subject_marks) + mark.lab
+
+        # Append processed mark data for use in the template
+        processed_marks.append({
+            'student': mark.student,
+            'register_number': mark.student.register_number,
+            'sub1': mark.sub1,
+            'sub2': mark.sub2,
+            'sub3': mark.sub3,
+            'sub4': mark.sub4,
+            'lab': mark.lab,
+            'average_mark': average_mark,
+            'total_marks': total_marks,
+        })
+
+    # Return the context to the template with role and processed marks
+    return render(request, 'internal_marks.html', {'role': role, 'marks': processed_marks})

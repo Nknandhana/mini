@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Internal Marks</h1>
+
+        {% if role == 'student' %}
+            <h3>Your Marks</h3>
+            <table>
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                </tr>
+                {% for mark in marks %}
+                    <tr>
+                        <td>{{ mark.subject }}</td>
+                        <td>{{ mark.marks }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% elif role == 'faculty' or role == 'hod' %}
+            <h3>Manage Marks</h3>
+            <table>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Name</th>
+                    <th>Register Number</th>
+                    <th>Sub1</th>
+                    <th>Sub2</th>
+                    <th>Sub3</th>
+                    <th>Sub4</th>
+                    <th>Lab</th>
+                    <th>Average Marks</th>
+                    <th>Total Marks</th>
+                    <th>Action</th>
+                </tr>
+                {% for mark in marks %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ mark.student.username }}</td>
+                        <td>{{ mark.register_number }}</td>
+                        <td>{{ mark.sub1 }}</td>
+                        <td>{{ mark.sub2 }}</td>
+                        <td>{{ mark.sub3 }}</td>
+                        <td>{{ mark.sub4 }}</td>
+                        <td>{{ mark.lab }}</td>
+                        <td>{{ mark.average_mark }}</td>
+                        <td>{{ mark.total_marks }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'update_marks' mark.id %}">
+                                {% csrf_token %}
+                                <input type="number" name="sub1" value="{{ mark.sub1 }}" required>
+                                <input type="number" name="sub2" value="{{ mark.sub2 }}" required>
+                                <input type="number" name="sub3" value="{{ mark.sub3 }}" required>
+                                <input type="number" name="sub4" value="{{ mark.sub4 }}" required>
+                                <input type="number" name="lab" value="{{ mark.lab }}" required>
+                                <button type="submit">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <h3>Upload New Marks</h3>
+            <form method="POST" action="{% url 'upload_marks' %}">
+                {% csrf_token %}
+                <label for="student">Student:</label>
+                <select name="student" required>
+                    {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.username }}</option>
+                    {% endfor %}
+                </select><br><br>
+
+                <label for="subject">Subject:</label>
+                <input type="text" name="subject" required><br><br>
+
+                <label for="sub1">Sub1:</label>
+                <input type="number" name="sub1" required><br><br>
+
+                <label for="sub2">Sub2:</label>
+                <input type="number" name="sub2" required><br><br>
+
+                <label for="sub3">Sub3:</label>
+                <input type="number" name="sub3" required><br><br>
+
+                <label for="sub4">Sub4:</label>
+                <input type="number" name="sub4" required><br><br>
+
+                <label for="lab">Lab:</label>
+                <input type="number" name="lab" required><br><br>
+
+                <button type="submit">Upload Marks</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Marks</title>
+</head>
+<body>
+    <h1>Your Internal Marks</h1>
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+        </tr>
+        {% for mark in marks %}
+        <tr>
+            <td>{{ mark.subject.name }}</td>
+            <td>{{ mark.marks }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

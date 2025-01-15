@@ -12,8 +12,6 @@ class User(models.Model):
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
-        ('transgender', 'Transgender'),
-        ('others', 'Others'),
     ]
 
     username = models.CharField(max_length=150, unique=True)

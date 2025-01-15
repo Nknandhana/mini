@@ -4,26 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+            background-color: #f7f9fc;
         }
 
         .container {
             max-width: 400px;
             margin: 50px auto;
-            padding: 20px;
-            background: #fff;
+            padding: 30px;
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
+            font-size: 28px;
             color: #333;
+            margin-bottom: 30px;
         }
 
         form {
@@ -32,26 +36,50 @@
             gap: 15px;
         }
 
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
         label {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            display: block;
+            color: #555;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007BFF;
         }
 
         input, select {
-            padding: 10px;
+            width: 100%;
+            padding: 12px 15px 12px 40px; /* Padding left for the icon */
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
         }
 
         button {
-            padding: 10px;
+            padding: 12px;
             background-color: #007BFF;
             color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
@@ -59,8 +87,6 @@
         }
 
         a {
-            display: block;
-            text-align: center;
             margin-top: 15px;
             text-decoration: none;
             color: #007BFF;
@@ -70,45 +96,84 @@
         a:hover {
             text-decoration: underline;
         }
+
+        /* Media Query for Responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            input, select, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Login</h1>
-        <form method="POST">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-            <label for="email">Email:</label>
-            <input type="email" name="email" placeholder="Enter your email" required>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" placeholder="Enter your password" required>
+            <!-- Email Field -->
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <label for="email"></label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
 
-            <label for="academic_year">Academic Year:</label>
-            <select name="academic_year" required>
-                <option value="2022-23">2022-23</option>
-                <option value="2023-24">2023-24</option>
-                <option value="2024-25">2024-25</option>
-                <option value="2025-26">2025-26</option>
-            </select>
+            <!-- Password Field -->
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <label for="password"></label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
 
-            <label for="role">Role:</label>
-            <select name="role" required>
-                <option value="faculty">Faculty:</option>
-                <option value="student">Student</option>
-                <option value="hod">HOD</option>
-            </select>
+            <!-- Academic Year Field -->
+            <div class="input-group">
+                <i class="fas fa-calendar-alt"></i>
+                <label for="academic_year"></label>
+                <select name="academic_year" required>
+                    <option value="2022-23">2022-23</option>
+                    <option value="2023-24">2023-24</option>
+                    <option value="2024-25">2024-25</option>
+                    <option value="2025-26">2025-26</option>
+                </select>
+            </div>
 
-            <label for="semester">Semester:</label>
-            <select name="semester" required>
-                <option value="s1">S1</option>
-                <option value="s2">S2</option>
-                <option value="s3">S3</option>
-                <option value="s4">S4</option>
-            </select>
+            <!-- Role Field -->
+            <div class="input-group">
+                <i class="fas fa-user-tie"></i>
+                <label for="role"></label>
+                <select name="role" required>
+                    <option value="faculty">Faculty</option>
+                    <option value="student">Student</option>
+                    <option value="hod">HOD</option>
+                </select>
+            </div>
+
+            <!-- Semester Field -->
+            <div class="input-group">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <label for="semester"></label>
+                <select name="semester" required>
+                    <option value="s1">S1</option>
+                    <option value="s2">S2</option>
+                    <option value="s3">S3</option>
+                    <option value="s4">S4</option>
+                </select>
+            </div>
 
             <button type="submit">Login</button>
         </form>
-        <a href="{% url 'signup' %}">Don't have an account? Register</a>
+
+        <p>Don't have an account? <a href="{% url 'signup' %}">Register</a></p>
     </div>
 </body>
 </html>

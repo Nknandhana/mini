@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-box {
+            padding: 20px;
+            overflow-y: scroll;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            background-color: #f0f0f0;
+            margin-left: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-right: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .loading {
+            color: #007bff;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive design */
+        @media screen and (max-width: 400px) {
+            .chat-container {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                <p>Hi! How can I help you today?</p>
+            </div>
+        </div>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+        <p id="loading-message" class="loading hidden">AI is typing...</p>
+    </div>
+
+    <script>
+        let chatBox = document.getElementById("chat-box");
+        let userInput = document.getElementById("user-input");
+        let sendButton = document.getElementById("send-btn");
+        let loadingMessage = document.getElementById("loading-message");
+
+        // Function to send a message
+        async function sendMessage() {
+            let message = userInput.value.trim();
+            if (message === "") return;
+
+            // Add user message to chat box
+            addMessageToChat(message, 'user');
+
+            // Clear input field
+            userInput.value = "";
+
+            // Scroll chat box to the bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Display the loading message
+            loadingMessage.classList.remove("hidden");
+
+            // Call AI response function
+            await getAIResponse(message);
+
+            // Hide the loading message after response
+            loadingMessage.classList.add("hidden");
+        }
+
+        // Function to display messages in the chat box
+        function addMessageToChat(message, sender) {
+            let messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender === 'user' ? "user-message" : "bot-message");
+            messageDiv.innerHTML = `<p>${message}</p>`;
+            chatBox.appendChild(messageDiv);
+        }
+
+        // Function to get AI response
+        async function getAIResponse(message) {
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer sk-svcacct-4v6GgH-zp-8G9W4Ut4ZqpKoGk1xIPrz94S7GN2TkQWRlEpGQLZLT3l0_ZLTT3BlbkFJcX-8cNKeA4m9AR9FrTtMY8NWrGcZ5xxQQdTvtyYE-x7xkvOEnSPfxD8L-7wA`  // Replace with your actual API key
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',  // Correct model name
+                        messages: [{ role: 'user', content: message }]  // Correct format for chat completion
+                    })
+                });
+
+                // Check for successful response
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                let aiResponse = data.choices[0].message.content.trim();
+
+                // Add AI message to chat box
+                addMessageToChat(aiResponse, 'bot');
+                
+                // Scroll chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                console.error("Error fetching AI response:", error);
+                addMessageToChat(`Sorry, something went wrong: ${error.message}. Please try again.`, 'bot');
+            }
+        }
+    </script>
+</body>
+</html>

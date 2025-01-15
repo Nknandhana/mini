@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student and Faculty Portal</title>
+    <style>
+        /* Styling code (same as provided earlier) */
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Welcome to the Student and Faculty Portal</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <!-- Faculty Section: Notes Upload -->
+        <div class="upload-section">
+            <h2>Faculty: Upload Notes</h2>
+            <form action="{% url 'upload_notes' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="notes">Choose Notes File:</label>
+                <input type="file" name="notes" id="notes" required>
+                <button type="submit">Upload Notes</button>
+            </form>
+        </div>
+
+        <!-- Student Section: Seminar & Assignment Upload -->
+        <div class="upload-section">
+            <h2>Student: Upload Seminar & Assignment</h2>
+            <form action="{% url 'upload_seminar_assignment' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="seminar">Choose Seminar File:</label>
+                <input type="file" name="seminar" id="seminar" required>
+                <label for="assignment">Choose Assignment File:</label>
+                <input type="file" name="assignment" id="assignment" required>
+                <button type="submit">Upload Seminar and Assignment</button>
+            </form>
+        </div>
+
+        <!-- Student Personal Information -->
+        <div class="student-info">
+            <h2>Student Personal Information</h2>
+            <div class="personal-details">
+                <form action="{% url 'update_student_details' %}" method="POST">
+                    {% csrf_token %}
+                    <p>Name:</p>
+                    <input type="text" name="name" placeholder="Enter your name" required>
+
+                    <p>Register Number:</p>
+                    <input type="text" name="register_number" placeholder="Enter your register number" required>
+
+                    <p>Subject:</p>
+                    <input type="text" name="subject" placeholder="Enter your subject" required>
+
+                    <button type="submit">Update Information</button>
+
+
+    <!-- Faculty Section: Notes Upload -->
+<div class="upload-section">
+    <h2>Faculty: Upload Notes</h2>
+    <form action="{% url 'upload_notes' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="notes">Choose Notes File:</label>
+        <input type="file" name="notes" id="notes" required>
+        <button type="submit">Upload Notes</button>
+    </form>
+</div>
+
+<!-- Student Section: Seminar & Assignment Upload -->
+<div class="upload-section">
+    <h2>Student: Upload Seminar & Assignment</h2>
+    <form action="{% url 'upload_seminar_assignment' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="seminar">Choose Seminar File:</label>
+        <input type="file" name="seminar" id="seminar" required>
+        <label for="assignment">Choose Assignment File:</label>
+        <input type="file" name="assignment" id="assignment" required>
+        <button type="submit">Upload Seminar and Assignment</button>
+    </form>
+</div>
+
+<!-- Student Personal Information -->
+<div class="student-info">
+    <h2>Student Personal Information</h2>
+    <div class="personal-details">
+        <form action="{% url 'update_student_details' %}" method="POST">
+            {% csrf_token %}
+            <p>Name:</p>
+            <input type="text" name="name" placeholder="Enter your name" required>
+
+            <p>Register Number:</p>
+            <input type="text" name="register_number" placeholder="Enter your register number" required>
+
+            <p>Subject:</p>
+            <input type="text" name="subject" placeholder="Enter your subject" required>
+
+            <button type="submit">Update Information</button>
+        </form>
+    </div>
+</div>
+
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
