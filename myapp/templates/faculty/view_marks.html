@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Marks</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .marks-input {
+            width: 60px;
+        }
+
+        .update-btn {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .update-btn:hover {
+            background-color: #007B9A;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Marks for Subject: {{ subject.name }}</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl. No.</th>
+                    <th>Student Name</th>
+                    <th>Register Number</th>
+                    <th>Exam 1</th>
+                    <th>Exam 2</th>
+                    <th>Exam 3</th>
+                    <th>Exam 4</th>
+                    <th>Average Marks</th>
+                    <th>Total Marks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.register_number }}</td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <td><input type="number" name="exam_1" class="marks-input" value="{{ student.marks.exam_1 }}"></td>
+                            <td><input type="number" name="exam_2" class="marks-input" value="{{ student.marks.exam_2 }}"></td>
+                            <td><input type="number" name="exam_3" class="marks-input" value="{{ student.marks.exam_3 }}"></td>
+                            <td><input type="number" name="exam_4" class="marks-input" value="{{ student.marks.exam_4 }}"></td>
+                            <td>{{ student.marks.average_marks }}</td>
+                            <td>{{ student.marks.total_marks }}</td>
+                            <td>
+                                <input type="hidden" name="student_id" value="{{ student.id }}">
+                                <button type="submit" class="update-btn">Update Marks</button>
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

@@ -1,13 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
-from django.contrib.sessions.backends.db import SessionStore
-from .models import User
-from django.http import HttpResponse
+from .models import User,Subject
 
-
-
-
+from django.core.files.storage import FileSystemStorage
 
 # Signup View
 def signup(request):
@@ -18,6 +14,7 @@ def signup(request):
         confirm_password = request.POST['confirm_password']
         phone = request.POST['phone']
         gender = request.POST['gender']
+        academic_year = request.POST['academic_year']
 
         # Check if passwords match
         if password != confirm_password:
@@ -41,7 +38,6 @@ def signup(request):
         return redirect('login')
 
     return render(request, 'signup.html')
-
 # Login View
 def login(request):
     if request.method == 'POST':
@@ -73,6 +69,7 @@ def login(request):
 # welcome view
 def welcome_view(request):
     return render(request, 'welcome.html')
+
 
 # Logout View
 def logout(request):
@@ -113,6 +110,11 @@ def signup(request):
         return redirect('login')
 
     return render(request, 'signup.html')
+
+
+
+
+ 
 
 # # Login View
 # def login(request):
@@ -191,46 +193,53 @@ def update_student_details(request):
         
         return redirect('update_success')  # Redirect after successfully updating details
 
-    def messages_view(request):
-      return render(request, 'messages.html')
+def messages_view(request):
+    return render(request, 'messages.html')
     
 
+def index(request):
+    return render(request, 'my_app/upload.html')
 
-def internal_marks(request):
-    # Ensure the user is authenticated and has the correct role
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login if user is not authenticated
+def index(request):
+    return render(request, 'my_app/internal_marks.html')
+
+def profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.name = request.POST.get('name')
+        user.email = request.POST.get('email')
+        if 'profile_image' in request.FILES:
+            user.profile_image = request.FILES['profile_image']
+        user.save()
+        return redirect('profile')  # Redirect to avoid resubmission on refresh
+    return render(request, 'profile.html', {'user': request.user})
+
+
+
+
+def register_subject(request, subject_id):
+    subject = Subject.objects.get(id=subject_id)
+    # Register logic here, like creating a student record
+    # This is just a placeholder to show how the subject registration works
+    return render(request, 'registration_success.html', {'subject': subject})
+
+# View to display marks and allow faculty to upload marks
+
+def view_marks(request, subject_id):
+    subject = Subject.objects.get(id=subject_id)
+    students = Student.objects.filter(subject=subject)
     
-    role = getattr(request.user, 'role', None)  # Get the user's role (faculty, student, etc.)
-    
-    # Fetch all marks
-    marks = Marks.objects.all()
+    if request.method == 'POST':
+        student_id = request.POST['student_id']
+        marks = Marks.objects.get(student_id=student_id)
+        
+        # Update marks
+        marks.exam_1 = int(request.POST['exam_1'])
+        marks.exam_2 = int(request.POST['exam_2'])
+        marks.exam_3 = int(request.POST['exam_3'])
+        marks.exam_4 = int(request.POST['exam_4'])
+        marks.save()
+        
+        return redirect('view_marks', subject_id=subject_id)
 
-    # Preprocess the marks to calculate average and total marks
-    processed_marks = []
-    for mark in marks:
-        # Assuming sub1, sub2, sub3, sub4 are exam scores
-        subject_marks = [mark.sub1, mark.sub2, mark.sub3, mark.sub4]
-        subject_marks.sort(reverse=True)  # Sort the marks in descending order
-
-        # Calculate the average (highest 2 out of 4 marks)
-        average_mark = sum(subject_marks[:2]) / 2
-
-        # Calculate the total marks (subject marks + lab)
-        total_marks = sum(subject_marks) + mark.lab
-
-        # Append processed mark data for use in the template
-        processed_marks.append({
-            'student': mark.student,
-            'register_number': mark.student.register_number,
-            'sub1': mark.sub1,
-            'sub2': mark.sub2,
-            'sub3': mark.sub3,
-            'sub4': mark.sub4,
-            'lab': mark.lab,
-            'average_mark': average_mark,
-            'total_marks': total_marks,
-        })
-
-    # Return the context to the template with role and processed marks
-    return render(request, 'internal_marks.html', {'role': role, 'marks': processed_marks})
+    return render(request, 'view_marks.html', {'subject': subject, 'students': students})

@@ -3,142 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Marks</title>
+    <title>Semester Registration</title>
     <style>
+        /* CSS for the Semester Registration Page */
         body {
+            background-image: url('https://example.com/your-background-image.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+            color: white;
         }
+
         .container {
             width: 80%;
             margin: 50px auto;
-            background: #fff;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
+
         h1 {
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+
+        .subject-selection {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        button {
-            background-color: #007BFF;
+
+        .subject-selection button {
+            background-color: #4CAF50;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 45%;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .subject-selection button:hover {
+            background-color: #45a049;
+        }
+
+        .marks-section {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+        }
+
+        .marks-section h2 {
+            text-align: center;
+        }
+
+        .marks-section p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .register-btn {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .register-btn:hover {
+            background-color: #007B9A;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: white;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        .table-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .input-marks {
+            width: 50px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Internal Marks</h1>
+        <h1>Semester S1</h1>
 
-        {% if role == 'student' %}
-            <h3>Your Marks</h3>
+        <!-- Subject Selection -->
+        <div class="subject-selection">
+            <button onclick="registerSubject('Subject 1')">Subject 1</button>
+            <button onclick="registerSubject('Subject 2')">Subject 2</button>
+            <button onclick="registerSubject('Subject 3')">Subject 3</button>
+            <button onclick="registerSubject('Subject 4')">Subject 4</button>
+        </div>
+        
+        <!-- Registration Confirmation -->
+        <div id="registrationStatus" style="text-align: center; font-size: 18px; color: yellow;"></div>
+
+        <!-- Marks Section -->
+        <div id="marksSection" class="marks-section">
+            <h2>Internal Marks</h2>
+            <p id="marks">Marks: Not Assigned Yet</p>
+            <button class="register-btn" onclick="viewMarks()">View Internal Marks</button>
+        </div>
+
+        <!-- Marks Table -->
+        <div id="marksTable" class="table-container">
+            <h2 style="text-align: center; color: white;">Student Marks</h2>
             <table>
-                <tr>
-                    <th>Subject</th>
-                    <th>Marks</th>
-                </tr>
-                {% for mark in marks %}
+                <thead>
                     <tr>
-                        <td>{{ mark.subject }}</td>
-                        <td>{{ mark.marks }}</td>
+                        <th>SL No</th>
+                        <th>Student Name</th>
+                        <th>Register Number</th>
+                        <th>Exam 1</th>
+                        <th>Exam 2</th>
+                        <th>Exam 3</th>
+                        <th>Average Marks</th>
+                        <th>Total Marks</th>
+                        <th>Action</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody id="marksTableBody">
+                    <!-- Dynamic rows will be added here -->
+                </tbody>
             </table>
-        {% elif role == 'faculty' or role == 'hod' %}
-            <h3>Manage Marks</h3>
-            <table>
-                <tr>
-                    <th>Sl No</th>
-                    <th>Name</th>
-                    <th>Register Number</th>
-                    <th>Sub1</th>
-                    <th>Sub2</th>
-                    <th>Sub3</th>
-                    <th>Sub4</th>
-                    <th>Lab</th>
-                    <th>Average Marks</th>
-                    <th>Total Marks</th>
-                    <th>Action</th>
-                </tr>
-                {% for mark in marks %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ mark.student.username }}</td>
-                        <td>{{ mark.register_number }}</td>
-                        <td>{{ mark.sub1 }}</td>
-                        <td>{{ mark.sub2 }}</td>
-                        <td>{{ mark.sub3 }}</td>
-                        <td>{{ mark.sub4 }}</td>
-                        <td>{{ mark.lab }}</td>
-                        <td>{{ mark.average_mark }}</td>
-                        <td>{{ mark.total_marks }}</td>
-                        <td>
-                            <form method="POST" action="{% url 'update_marks' mark.id %}">
-                                {% csrf_token %}
-                                <input type="number" name="sub1" value="{{ mark.sub1 }}" required>
-                                <input type="number" name="sub2" value="{{ mark.sub2 }}" required>
-                                <input type="number" name="sub3" value="{{ mark.sub3 }}" required>
-                                <input type="number" name="sub4" value="{{ mark.sub4 }}" required>
-                                <input type="number" name="lab" value="{{ mark.lab }}" required>
-                                <button type="submit">Update</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <h3>Upload New Marks</h3>
-            <form method="POST" action="{% url 'upload_marks' %}">
-                {% csrf_token %}
-                <label for="student">Student:</label>
-                <select name="student" required>
-                    {% for student in students %}
-                        <option value="{{ student.id }}">{{ student.username }}</option>
-                    {% endfor %}
-                </select><br><br>
+        </div>
 
-                <label for="subject">Subject:</label>
-                <input type="text" name="subject" required><br><br>
-
-                <label for="sub1">Sub1:</label>
-                <input type="number" name="sub1" required><br><br>
-
-                <label for="sub2">Sub2:</label>
-                <input type="number" name="sub2" required><br><br>
-
-                <label for="sub3">Sub3:</label>
-                <input type="number" name="sub3" required><br><br>
-
-                <label for="sub4">Sub4:</label>
-                <input type="number" name="sub4" required><br><br>
-
-                <label for="lab">Lab:</label>
-                <input type="number" name="lab" required><br><br>
-
-                <button type="submit">Upload Marks</button>
-            </form>
-        {% endif %}
     </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Semester Registration System. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Function to register for a subject
+        function registerSubject(subject) {
+            document.getElementById('registrationStatus').textContent = `You have successfully registered for ${subject}.`;
+
+            // Show the marks section after registration
+            document.getElementById('marksSection').style.display = 'block';
+
+            // Reset the marks display
+            document.getElementById('marks').textContent = 'Marks: Not Assigned Yet';
+        }
+
+        // Function to view internal marks
+        function viewMarks() {
+            const role = 'faculty'; // Change to 'faculty' for testing mark entry
+            if (role === 'student') {
+                alert('You can only view the marks, not edit them.');
+                document.getElementById('marksTable').style.display = 'block';
+            } else if (role === 'faculty') {
+                // Add a new student row with editable marks
+                const studentName = prompt('Enter the student name:');
+                const registerNumber = prompt('Enter the student register number:');
+                const exam1 = parseFloat(prompt('Enter marks for Exam 1:'));
+                const exam2 = parseFloat(prompt('Enter marks for Exam 2:'));
+                const exam3 = parseFloat(prompt('Enter marks for Exam 3:'));
+
+                const totalMarks = exam1 + exam2 + exam3;
+                const averageMarks = (exam1 + exam2 + exam3) / 3;
+
+                const tableBody = document.getElementById('marksTableBody');
+                const row = tableBody.insertRow();
+
+                row.insertCell(0).textContent = tableBody.rows.length; // SL No
+                row.insertCell(1).textContent = studentName;
+                row.insertCell(2).textContent = registerNumber;
+                row.insertCell(3).textContent = exam1;
+                row.insertCell(4).textContent = exam2;
+                row.insertCell(5).textContent = exam3;
+                row.insertCell(6).textContent = averageMarks.toFixed(2);
+                row.insertCell(7).textContent = totalMarks;
+
+                // Add action buttons (edit or delete) if needed
+                const actionCell = row.insertCell(8);
+                actionCell.innerHTML = '<button onclick="editMarks(this)">Edit</button> <button onclick="deleteRow(this)">Delete</button>';
+                
+                document.getElementById('marksTable').style.display = 'block';
+            }
+        }
+
+        // Function to edit marks
+        function editMarks(button) {
+            const row = button.parentElement.parentElement;
+            const exam1 = prompt('Edit marks for Exam 1:', row.cells[3].textContent);
+            const exam2 = prompt('Edit marks for Exam 2:', row.cells[4].textContent);
+            const exam3 = prompt('Edit marks for Exam 3:', row.cells[5].textContent);
+
+            const totalMarks = parseFloat(exam1) + parseFloat(exam2) + parseFloat(exam3);
+            const averageMarks = totalMarks / 3;
+
+            row.cells[3].textContent = exam1;
+            row.cells[4].textContent = exam2;
+            row.cells[5].textContent = exam3;
+            row.cells[6].textContent = averageMarks.toFixed(2);
+            row.cells[7].textContent = totalMarks;
+        }
+
+        // Function to delete a row
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+        }
+    </script>
+
 </body>
 </html>

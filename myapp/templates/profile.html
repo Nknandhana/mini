@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburger Menu with Profile Edit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        /* Hamburger menu button */
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .menu-btn div {
+            height: 5px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        /* Dropdown menu */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            z-index: 1000;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Profile Edit Form */
+        .profile-edit-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .profile-edit-container input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .profile-edit-container input[type="text"],
+        .profile-edit-container input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .profile-edit-container button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .profile-edit-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hamburger Menu Button -->
+    <div class="menu-btn" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="dropdownMenu" class="dropdown-menu">
+        <a href="javascript:void(0)" onclick="editProfile()">Edit Profile</a>
+        <a href="{% url 'settings' %}">Settings</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+
+    <!-- Profile Edit Form -->
+    <div id="profileEdit" class="profile-edit-container">
+        <h2>Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="profileImage">Profile Image:</label>
+            <input type="file" id="profileImage" name="profile_image" accept="image/*" onchange="previewImage(event)">
+            <br>
+            <img id="imagePreview" src="" alt="Profile Image Preview" style="max-width: 100px; margin-bottom: 10px;">
+            <br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ user.name }}" placeholder="Enter your name">
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="Enter your email">
+            <br>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // Toggle the dropdown menu visibility
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Show the profile edit form
+        function editProfile() {
+            document.getElementById('profileEdit').style.display = 'block';
+            document.getElementById('dropdownMenu').style.display = 'none';  // Hide the menu after clicking
+        }
+
+        // Preview profile image before uploading
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imagePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+</body>
+</html>
