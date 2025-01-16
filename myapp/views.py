@@ -153,9 +153,6 @@ def internal_marks(request):
     # Your logic here
     return render(request, 'internal_marks.html')
 
-def messages_view(request):
-    # Logic to retrieve and display messages
-    return render(request, 'messages.html')
 
 def upload_notes(request):
     if request.method == 'POST' and request.FILES['notes']:
@@ -193,8 +190,7 @@ def update_student_details(request):
         
         return redirect('update_success')  # Redirect after successfully updating details
 
-def messages_view(request):
-    return render(request, 'messages.html')
+
     
 
 def index(request):
