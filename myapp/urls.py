@@ -16,5 +16,17 @@ urlpatterns = [
 
      path('register/<int:subject_id>/', views.register_subject, name='register_subject'),
     path('view_marks/<int:subject_id>/', views.view_marks, name='view_marks'),
+
+    
+
+    
+     path('faculty_home/', views.faculty_home, name='faculty_home'),
+    path('student_home/', views.student_home, name='student_home'),
+    path('upload/', views.upload_note_view, name='upload_note'),
+    
+    
+
+]
+
    
-  ]
+  

@@ -243,3 +243,46 @@ def view_marks(request, subject_id):
         return redirect('view_marks', subject_id=subject_id)
 
     return render(request, 'view_marks.html', {'subject': subject, 'students': students})
+
+def faculty_home(request):
+    # Your view logic here
+    return render(request, 'faculty_home.html')
+
+def faculty_home(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        note = Note.objects.create(title=title, content=content, uploaded_by=request.user)
+        return JsonResponse({'status': 'success'})
+    
+    notes = Note.objects.all()
+    return render(request, 'faculty_home.html', {'notes': notes})
+
+def student_home(request):
+    notes = Note.objects.all()
+    return render(request, 'student_home.html', {'notes': notes})
+
+
+def upload_notes(request):
+    if request.method == 'POST':
+        # Handle the form submission to upload notes
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        note = Note.objects.create(title=title, content=content, uploaded_by=request.user)
+        return render(request, 'upload_success.html')  # or redirect to another page
+    return render(request, 'upload_notes.html') 
+
+def upload_note_view(request):
+    if request.method == 'POST':
+        form = NoteUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.faculty = request.user  # Assign the logged-in user as the faculty
+            note.save()
+            return render(request, 'upload_note.html', {'form': form, 'success': True})
+    else:
+        form = NoteUploadForm()
+
+    notes = Note.objects.filter(faculty=request.user)  # Show only notes uploaded by the logged-in faculty
+    return render(request, 'upload_note.html', {'form': form, 'notes': notes, 'success': False})
+

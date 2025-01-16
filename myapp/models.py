@@ -50,3 +50,22 @@ class Marks(models.Model):
 
     def __str__(self):
         return f"Marks for {self.student.name}"
+    
+    class Note(models.Model):
+      title = models.CharField(max_length=255)
+      content = models.TextField()
+      uploaded_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)  # Assuming faculty is a user
+      created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+    
+    class Note(models.Model):
+      title = models.CharField(max_length=100)
+      description = models.TextField()
+      file = models.FileField(upload_to='notes/')
+      faculty = models.ForeignKey(User, on_delete=models.CASCADE)
+      created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

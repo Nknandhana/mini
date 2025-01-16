@@ -1,0 +1,114 @@
+<!-- myapp/templates/upload_note.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        form {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .notes-list {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .note-item a {
+            text-decoration: none;
+            color: #2196F3;
+        }
+
+        .note-item a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Upload Your Notes</h1>
+
+    {% if success %}
+        <p class="success-message">Your note has been uploaded successfully!</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Your Uploaded Notes</h2>
+
+    {% if notes %}
+        <div class="notes-list">
+            {% for note in notes %}
+                <div class="note-item">
+                    <strong>{{ note.title }}</strong><br>
+                    <p>{{ note.description }}</p>
+                    <a href="{{ note.file.url }}" target="_blank">Download</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No notes uploaded yet.</p>
+    {% endif %}
+
+</body>
+</html>

@@ -84,28 +84,30 @@
     </style>
 </head>
 <body>
+   
     <div class="login-container">
-        <h1>Student Login</h1>
+        <h1><i class="fas fa-user-graduate"></i> Student Login</h1>
         <form method="POST">
             {% csrf_token %}
-
             <div class="input-icon">
-                <label for="email">Email:</label>
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" required>
-            </div>
-
-            <div class="input-icon">
-                <label for="password">Password:</label>
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" required>
-            </div>
-
-            <div class="input-icon">
-                <label for="register_number">Register Number:</label>
+                <label for="register_number"></label>
                 <i class="fas fa-id-card"></i>
-                <input type="text" name="register_number" required>
+                <input type="text" name="register_number" placeholder="Register Number" required>
             </div>
+        </form>
+
+        <div class="class-links">
+            {% for course in courses %}
+                <a href="{% url 'individual_attendence' %}?course={{ course.id }}&student={{ student_obj.id }}&st=0" class="class-link">
+                    <i class="fas fa-book"></i> {{ course.course_name }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
 
             <button type="submit">Login</button>
         </form>

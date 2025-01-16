@@ -1,150 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #eef2f7;
+            color: #333;
             margin: 0;
             padding: 0;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 600px;
             margin: 50px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #023058;
             margin-bottom: 20px;
+            font-size: 28px;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
         label {
+            margin-bottom: 8px;
             font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
         }
 
         input, select {
-            padding: 10px;
+            padding: 12px;
+            font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
-            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
         }
 
         button {
-            padding: 10px;
-            background-color: #007BFF;
+            padding: 12px;
+            background-color: #4CAF50;
             color: #fff;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
 
-        .note {
+        .login-btn {
+            background-color: #2196F3;
             text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .note a {
+        .login-btn:hover {
+            background-color: #1e88e5;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        a {
             color: #007BFF;
             text-decoration: none;
         }
 
-        .note a:hover {
+        a:hover {
             text-decoration: underline;
         }
+
+        #class_field {
+            display: none; /* Initially hidden */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            input, select, button {
+                font-size: 14px;
+            }
+        }
     </style>
+    <script>
+        // Function to toggle the visibility of the class field
+        function toggleClassField() {
+            const userType = document.getElementById('user_type').value;
+            const classField = document.getElementById('class_field');
+            if (userType === 'faculty') {
+                classField.style.display = 'none'; // Hide the field for faculty
+            } else if (userType === 'student') {
+                classField.style.display = 'block'; // Show the field for students
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <h1>Signup</h1>
-        <form method="POST">
+        <form method="post">
             {% csrf_token %}
-            
-            <!-- Username Field -->
-            <div class="input-group">
-                <i class="fas fa-user icon"></i>
-                <label for="username"></label>
-                <input type="text" name="username" placeholder="Enter your username" required>
+
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username"><i class="fas fa-user icon"></i>Username:</label>
+                <input type="text" name="username" required>
             </div>
 
-            <!-- Email Field -->
-            <div class="input-group">
-                <i class="fas fa-envelope icon"></i>
-                <label for="email"></label>
-                <input type="email" name="email" placeholder="Enter your email" required>
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope icon"></i>Email:</label>
+                <input type="email" name="email" required>
             </div>
 
-            <!-- Password Field -->
-            <div class="input-group">
-                <i class="fas fa-lock icon"></i>
-                <label for="password"></label>
-                <input type="password" name="password" placeholder="Enter your password" required>
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock icon"></i>Password:</label>
+                <input type="password" name="password" required>
             </div>
 
-            <!-- Confirm Password Field -->
-            <div class="input-group">
-                <i class="fas fa-lock icon"></i>
-                <label for="confirm_password"></label>
-                <input type="password" name="confirm_password" placeholder="Re-enter your password" required>
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirm_password"><i class="fas fa-lock icon"></i>Confirm Password:</label>
+                <input type="password" name="confirm_password" required>
             </div>
 
-            <!-- Phone Field -->
-            <div class="input-group">
-                <i class="fas fa-phone-alt icon"></i>
-                <label for="phone"></label>
-                <input type="tel" name="phone" placeholder="Enter your phone number" required>
-            </div>
-
-            <!-- Gender Field -->
-            <div class="input-group">
-                <i class="fas fa-venus-mars icon"></i>
-                <label for="gender"></label>
-                <select name="gender" required>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-            </div>
-
-            <!-- User Type Selection -->
-            <div class="input-group">
-                <i class="fas fa-user-tie icon"></i>
-                <label for="user_type"></label>
-                <select name="user_type" required>
-                    <option value="faculty">Faculty</option>
-                    <option value="hod">HOD</option>
+            <!-- User Type -->
+            <div class="form-group">
+                <label for="user_type"><i class="fas fa-user-tag icon"></i>User Type:</label>
+                <select name="user_type" id="user_type" onchange="toggleClassField()" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
                 </select>
             </div>
 
-            <button type="submit">Register</button>
+            <!-- Class Field (Only for Students) -->
+            <div id="class_field" class="form-group">
+                <label for="user_class">Class:</label>
+                <select name="user_class">
+                    {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.class_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Signup Button -->
+            <div class="form-group">
+                <button type="submit">Signup</button>
+            </div>
+            <div class="form-group">
+                <p style="text-align: center;">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+
+
+                </div>
         </form>
-        <div class="note">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
-        </div>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
     </div>
 </body>
 </html>

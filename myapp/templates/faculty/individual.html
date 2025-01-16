@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        h3 {
+            text-align: center;
+            margin: 10px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .back-button {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #f44336;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>internal mark</h1>
+    <h3>Name:{{student_obj.name}}</h3>
+    <h3>Course:{{course_obj.course_name}}</h3>
+
+    <!-- Back Button -->
+    {% if st == "0" %}
+     <a href="{% url 'student_home' %}" class="back-button">Back</a>
+     {% else %}
+     <a href="{% url 'faculty_home' %}?class={{student_obj.user_class.id}}" class="back-button">Back</a>
+     {% endif %}
+    
+
+    <!-- internal mark Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Period</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in internal_marks_obj %}
+            <tr>
+                <td>{{ record.date }}</td>
+                <td>{{ record.period }}</td>
+
+                {% if record.present == 1 %}
+                <td style="color: #4CAF50;">Present</td>
+                {% else %}
+                <td style="color:#e53935">Absent</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

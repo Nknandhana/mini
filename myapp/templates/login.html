@@ -140,40 +140,17 @@
                 <i class="fas fa-calendar-alt"></i>
                 <label for="academic_year"></label>
                 <select name="academic_year" required>
-                    <option value="2022-23">2022-23</option>
-                    <option value="2023-24">2023-24</option>
-                    <option value="2024-25">2024-25</option>
-                    <option value="2025-26">2025-26</option>
+                    <option value="2021-23">2021-23</option>
+                    <option value="2022-24">2022-24</option>
+                    <option value="2023-25">2023-25</option>
+                    <option value="2024-26">2024-26</option>
                 </select>
             </div>
 
-            <!-- Role Field -->
-            <div class="input-group">
-                <i class="fas fa-user-tie"></i>
-                <label for="role"></label>
-                <select name="role" required>
-                    <option value="faculty">Faculty</option>
-                    <option value="student">Student</option>
-                    <option value="hod">HOD</option>
-                </select>
-            </div>
-
-            <!-- Semester Field -->
-            <div class="input-group">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <label for="semester"></label>
-                <select name="semester" required>
-                    <option value="s1">S1</option>
-                    <option value="s2">S2</option>
-                    <option value="s3">S3</option>
-                    <option value="s4">S4</option>
-                </select>
-            </div>
-
-            <button type="submit">Login</button>
+                     <button type="submit">Login</button>
         </form>
 
-        <p>Don't have an account? <a href="{% url 'signup' %}">Register</a></p>
-    </div>
+      <p>Don't have an account? <a href="{% url 'signup' %}">Register</a></p>
+    </div>  
 </body>
 </html>
