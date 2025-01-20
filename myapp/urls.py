@@ -22,11 +22,9 @@ urlpatterns = [
     
      path('faculty_home/', views.faculty_home, name='faculty_home'),
     path('student_home/', views.student_home, name='student_home'),
-    path('upload/', views.upload_note_view, name='upload_note'),
-    
-    
-
+      path('add_course/', views.add_course, name='add_course'),
+      path('faculty_login/', views.faculty_login, name='faculty_login'),
+    path('internal_marks/', views.internal_marks, name='internal_marks'),
 ]
-
    
   

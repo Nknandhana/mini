@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
-from .models import User,Subject
+from .models import User,Subject,Class
 
 from django.core.files.storage import FileSystemStorage
 
@@ -151,7 +151,7 @@ def user_list(request):
 
 def internal_marks(request):
     # Your logic here
-    return render(request, 'internal_marks.html')
+    return render(request, 'faculty/internal_marks.html')
 
 
 def upload_notes(request):
@@ -282,3 +282,117 @@ def upload_note_view(request):
     notes = Note.objects.filter(faculty=request.user)  # Show only notes uploaded by the logged-in faculty
     return render(request, 'upload_note.html', {'form': form, 'notes': notes, 'success': False})
 
+
+
+
+
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            # Process the form data
+            name = form.cleaned_data['name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user_type = form.cleaned_data['user_type']
+            user_class = form.cleaned_data['user_class'] if user_type == 'student' else None
+
+            # Create the user
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = name
+            user.save()
+
+            # You can also create a user profile if needed (for user_type, user_class, etc.)
+
+            messages.success(request, 'Account created successfully. You can now log in.')
+            return redirect('login')  # Redirect to login page after successful signup
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = SignupForm()
+
+    return render(request, 'signup.html', {'form': form})
+
+
+def add_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('faculty_home')  # Redirect to faculty home after successful submission
+    else:
+        form = CourseForm()
+
+    return render(request, 'add_course.html', {'form': form})
+
+
+def faculty_home(request):
+    # Get all classes associated with the logged-in user
+    # Assuming a faculty member can have many classes
+    # You can filter classes based on faculty or other criteria if necessary
+    classes = Class.objects.all()  # Modify based on your logic
+    
+    return render(request, 'faculty_home.html', {'classes': classes})
+
+
+def faculty_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        
+        # Authenticate the user
+        user = authenticate(request, username=email, password=password)
+        
+        if user is not None:
+            # Log the user in
+            login(request, user)
+            return redirect('faculty_home')  # Redirect to the faculty home page
+        else:
+            # Invalid login
+            messages.error(request, "Invalid email or password.")
+    
+    return render(request, 'faculty_login.html')
+
+
+def faculty_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        
+        try:
+            # Get the user by email
+            user = User.objects.get(email=email)
+            
+            # Authenticate the user
+            if user.check_password(password):
+                login(request, user)
+                return redirect('faculty_home')  # Redirect to the faculty home page
+            else:
+                messages.error(request, "Invalid password.")
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+    
+    return render(request, 'faculty_login.html')
+
+
+def student_record(request, student_id):
+    student_obj = Student.objects.get(id=student_id)
+    course_obj = Course.objects.get(id=student_obj.course_id)
+    attendence_obj = Attendance.objects.filter(student=student_obj)
+    internal_marks_obj = InternalMarks.objects.filter(student=student_obj)
+
+    # Example value for 'st', it can be dynamically set based on some condition
+    st = "0"  # or some other value
+
+    context = {
+        'student_obj': student_obj,
+        'course_obj': course_obj,
+        'attendence_obj': attendence_obj,
+        'internal_marks_obj': internal_marks_obj,
+        'st': st,
+    }
+
+    return render(request, 'internal_marks.html', context)

@@ -3,179 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Marks and Notes</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-            margin: 20px;
-        }
-
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .section-header {
-            color: #4CAF50;
-            margin-bottom: 15px;
-        }
-
-        .role-selection {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .student-section, .faculty-section {
-            margin-top: 20px;
-        }
-
-        .student-section p {
-            font-size: 18px;
-        }
-
-        .faculty-section input, .faculty-section button {
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            width: 100%;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .faculty-section button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-
-        .faculty-section button:hover {
-            background-color: #45a049;
-        }
-
-        .notes-list {
-            margin-top: 20px;
-        }
-
-        .notes-list li {
-            background-color: #f2f2f2;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .notes-list li a {
-            text-decoration: none;
-            color: #4CAF50;
-        }
-
-        .notes-list li a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Upload</title>
 </head>
 <body>
+    <h1>Upload Files</h1>
+    {% if user.is_staff %}
+        <h2>Upload Notes</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+    {% else %}
+        <h2>Upload Seminar</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ seminar_form.as_p }}
+            <button type="submit">Upload Seminar</button>
+        </form>
 
-    <div class="container">
-        <h1>Welcome to the Marks and Notes Portal</h1>
-
-        <!-- Role Selection -->
-        <div class="role-selection">
-            <label for="role">Select Role: </label>
-            <select id="role" onchange="toggleRole()">
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
-            </select>
-        </div>
-
-        <!-- Student Section -->
-        <div id="studentSection" class="student-section hidden">
-            <h2 class="section-header">Your Marks</h2>
-            <p id="studentMarks">Marks: 85</p>
-
-            <h3 class="section-header">Available Notes</h3>
-            <ul id="notesList" class="notes-list">
-                <!-- Dynamically display notes here -->
-            </ul>
-        </div>
-
-        <!-- Faculty Section -->
-        <div id="facultySection" class="faculty-section hidden">
-            <h2 class="section-header">Upload Notes</h2>
-
-            <label for="noteTitle">Note Title:</label>
-            <input type="text" id="noteTitle" placeholder="Enter note title">
-
-            <label for="noteContent">Note Content:</label>
-            <textarea id="noteContent" rows="4" placeholder="Enter note content"></textarea>
-
-            <button onclick="uploadNotes()">Upload Notes</button>
-
-            <h3 class="section-header">All Notes</h3>
-            <ul id="allNotesList" class="notes-list">
-                <!-- Dynamically display all uploaded notes here -->
-            </ul>
-        </div>
-    </div>
-
-    <script>
-        function toggleRole() {
-            const role = document.getElementById('role').value;
-            if (role === 'student') {
-                document.getElementById('studentSection').classList.remove('hidden');
-                document.getElementById('facultySection').classList.add('hidden');
-            } else {
-                document.getElementById('studentSection').classList.add('hidden');
-                document.getElementById('facultySection').classList.remove('hidden');
-            }
-        }
-
-        function uploadNotes() {
-            const noteTitle = document.getElementById('noteTitle').value;
-            const noteContent = document.getElementById('noteContent').value;
-            if (noteTitle && noteContent) {
-                // Simulate uploading note (this should be replaced with Django backend logic)
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `<strong>${noteTitle}</strong>: ${noteContent} <a href="#">View</a>`;
-                document.getElementById('allNotesList').appendChild(listItem);
-
-                // Clear input fields
-                document.getElementById('noteTitle').value = '';
-                document.getElementById('noteContent').value = '';
-            }
-        }
-
-        // Default role is student
-        toggleRole();
-    </script>
-<ul id="notesList" class="notes-list">
-    {% for note in notes %}
-        <li><strong>{{ note.title }}</strong>: {{ note.content }}</li>
-    {% endfor %}
-</ul>
-
+        <h2>Upload Assignment</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ assignment_form.as_p }}
+            <button type="submit">Upload Assignment</button>
+        </form>
+    {% endif %}
 </body>
 </html>

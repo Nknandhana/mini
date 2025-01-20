@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Individual Attendance</title>
+    <title>Individual internal mark</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,7 +74,7 @@
 </head>
 
 <body>
-    <h1>internal mark</h1>
+    <h1>internal Record</h1>
     <h3>Name:{{student_obj.name}}</h3>
     <h3>Course:{{course_obj.course_name}}</h3>
 
@@ -87,26 +86,22 @@
      {% endif %}
     
 
-    <!-- internal mark Table -->
+    <!-- Attendance Table -->
     <table>
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Period</th>
-                <th>Status</th>
+                <th>Test Number</th>
+                <th>Mark</th>
             </tr>
         </thead>
         <tbody>
-            {% for record in internal_marks_obj %}
+            {% for record in attendence_obj %}
             <tr>
                 <td>{{ record.date }}</td>
                 <td>{{ record.period }}</td>
+                <td>{{ record.present }} / {{ record.max_mark }}</td>
 
-                {% if record.present == 1 %}
-                <td style="color: #4CAF50;">Present</td>
-                {% else %}
-                <td style="color:#e53935">Absent</td>
-                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

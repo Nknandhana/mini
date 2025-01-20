@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students</title>
+    <title>internal mark</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -108,54 +108,102 @@
             padding: 10px 30px;
             gap: 200px;
         }
+
+        .attendance-form {
+            width: 80%;
+            margin: 30px auto;
+        }
+
+        .attendance-form button {
+            width: 300px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 30px;
+        }
+
+        .attendance-form button:hover {
+            background-color: #45a049;
+        }
+
+        .date-period-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px auto;
+            width: 80%;
+            padding: 10px 0;
+        }
+
+        .date-period-container input {
+            padding: 8px;
+            font-size: 16px;
+            width: 45%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .date-period-container label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
 
-    <h1>{{ class.class_name }} - Students</h1>
+    <h1>{{ class.class_name }} internal mark</h1>
 
     <!-- Back Button -->
     <div class="buttons">
         <a href="{% url 'faculty_home' %}" class="back-button">Back</a>
-        
-        <!-- Add Course or Take Attendance -->
-        {% if course %}
-        <h3 style="margin: 0%;justify-content: center;display: flex;align-items: center;">{{ course_name }}</h3>
-        <a href="{% url 'take_attendence' %}?class={{ class.id }}" class="add-course take">Add Internal mark</a>
-        {% else %}
-        <a href="{% url 'add_course' %}?class={{ class.id }}" class="add-course">Add Course</a>
-        {% endif %}
     </div>
 
-    <!-- Student Table -->
-    <table>
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                {% if course %}
-                <!-- <th>Attendance (%)</th> -->
-                <th>View Details</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for student, attendance in attendance_list %}
+    <form method="POST" class="attendance-form">
+        {% csrf_token %}
+        
+        <!-- Date and Period Input -->
+        <div class="date-period-container">
+            <div>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div>
+                <label for="period">Test number:</label>
+                <input type="number" id="period" name="period" required min="1"> <br>
+                <label for="max_mark">Maximum mark:</label>
+                <input type="number" id="max_mark" name="max_mark">
+            </div>
+        </div>
+
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.user.username }}</td>
-                    <td>{{ student.user.email }}</td>
-                    {% if course %}
-                        <!-- <td>{{ attendance|floatformat:1 }}%</td> -->
-                        <td><a href="{% url 'individual_attendence' %}?course={{ course_id }}&student={{ student.id }}&st=1">View</a></td>
-                    {% endif %}
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Present</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.id }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>
+                        <input type="number" id="exampleInput" name="present_{{ student.id }}" placeholder="Enter a number" min="0">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <button type="submit">Submit</button>
+        </div>
+       
+    </form>
 
 </body>
 </html>

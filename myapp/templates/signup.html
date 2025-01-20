@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #eef2f7;
+            background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 0;
@@ -14,48 +15,67 @@
         .container {
             max-width: 600px;
             margin: 50px auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
             color: #023058;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             font-size: 28px;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
+            margin-bottom: 25px;
         }
 
         label {
             margin-bottom: 8px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
             color: #555;
         }
 
-        input, select {
-            padding: 12px;
-            font-size: 16px;
+        .input-group {
+            display: flex;
+            align-items: center;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: border-color 0.3s;
+            border-radius: 4px;
+            padding: 12px;
+            background-color: #fff;
         }
 
-        input:focus, select:focus {
-            border-color: #007BFF;
+        .input-group i {
+            margin-right: 10px;
+            color: #999;
+        }
+
+        input, select {
+            flex: 1;
+            border: none;
             outline: none;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        select {
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            background-color: #f9f9f9;
         }
 
         button {
@@ -64,61 +84,54 @@
             color: #fff;
             font-size: 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        .login-btn {
-            background-color: #2196F3;
+        .error, .redirect-message {
+            color: red;
+            font-size: 14px;
             text-align: center;
+            margin-top: 10px;
+        }
+
+        .redirect-message a {
+            color: #4CAF50;
             text-decoration: none;
-            display: inline-block;
         }
 
-        .login-btn:hover {
-            background-color: #1e88e5;
+        .redirect-message a:hover {
+            text-decoration: underline;
         }
 
-        .error {
+        .toggle-message {
+            display: none;
             color: red;
             font-size: 14px;
             text-align: center;
         }
 
-        .icon {
-            margin-right: 8px;
-        }
-
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        #class_field {
-            display: none; /* Initially hidden */
-        }
-
-        /* Responsive Design */
+        /* Add some responsiveness */
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
                 margin: 20px;
+                padding: 20px;
             }
 
             h1 {
                 font-size: 24px;
             }
 
-            input, select, button {
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            button {
                 font-size: 14px;
             }
         }
@@ -130,48 +143,70 @@
             const classField = document.getElementById('class_field');
             if (userType === 'faculty') {
                 classField.style.display = 'none'; // Hide the field for faculty
-            } else if (userType === 'student') {
+            } else {
                 classField.style.display = 'block'; // Show the field for students
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
+
     <div class="container">
         <h1>Signup</h1>
+
         <form method="post">
             {% csrf_token %}
 
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="name" required placeholder="Enter your full name">
+                </div>
+            </div>
+
             <!-- Username -->
             <div class="form-group">
-                <label for="username"><i class="fas fa-user icon"></i>Username:</label>
-                <input type="text" name="username" required>
+                <label for="username">Username:</label>
+                <div class="input-group">
+                    <i class="fas fa-user-circle"></i>
+                    <input type="text" name="username" required placeholder="Create a username">
+                </div>
             </div>
 
             <!-- Email -->
             <div class="form-group">
-                <label for="email"><i class="fas fa-envelope icon"></i>Email:</label>
-                <input type="email" name="email" required>
+                <label for="email">Email:</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
             </div>
 
             <!-- Password -->
             <div class="form-group">
-                <label for="password"><i class="fas fa-lock icon"></i>Password:</label>
-                <input type="password" name="password" required>
+                <label for="password">Password:</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" required placeholder="Create a password">
+                </div>
             </div>
 
             <!-- Confirm Password -->
             <div class="form-group">
-                <label for="confirm_password"><i class="fas fa-lock icon"></i>Confirm Password:</label>
-                <input type="password" name="confirm_password" required>
+                <label for="confirm_password">Confirm Password:</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="confirm_password" required placeholder="Re-enter your password">
+                </div>
             </div>
 
             <!-- User Type -->
             <div class="form-group">
-                <label for="user_type"><i class="fas fa-user-tag icon"></i>User Type:</label>
+                <label for="user_type">User Type:</label>
                 <select name="user_type" id="user_type" onchange="toggleClassField()" required>
-                    <option value="" disabled selected>--Select--</option>
+                  
                     <option value="student">Student</option>
                     <option value="faculty">Faculty</option>
                 </select>
@@ -191,16 +226,17 @@
             <div class="form-group">
                 <button type="submit">Signup</button>
             </div>
-            <div class="form-group">
-                <p style="text-align: center;">Already have an account? <a href="{% url 'login' %}">Login</a></p>
-
-
-                </div>
         </form>
 
         {% if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
+
+        <!-- Redirect to Login for Registered Users -->
+        <p class="redirect-message">
+            Already registered? <a href="{% url 'login' %}">Login here</a>.
+        </p>
     </div>
+
 </body>
 </html>

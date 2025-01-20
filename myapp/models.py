@@ -1,4 +1,7 @@
 from django.db import models
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -51,21 +54,78 @@ class Marks(models.Model):
     def __str__(self):
         return f"Marks for {self.student.name}"
     
-    class Note(models.Model):
-      title = models.CharField(max_length=255)
-      content = models.TextField()
-      uploaded_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)  # Assuming faculty is a user
-      created_at = models.DateTimeField(auto_now_add=True)
+
+    
+    
+class Note(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    file = models.FileField(upload_to='notes/')
+    faculty = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
     
-    class Note(models.Model):
-      title = models.CharField(max_length=100)
-      description = models.TextField()
-      file = models.FileField(upload_to='notes/')
-      faculty = models.ForeignKey(User, on_delete=models.CASCADE)
-      created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Course(models.Model):
+    course_name = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.title
+        return self.course_name
+    
+
+class Class(models.Model):
+    class_name = models.CharField(max_length=100)
+# You can add more fields like description, etc.
+
+    def __str__(self):
+        return self.class_name
+    
+
+
+
+
+    
+    
+    
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    user_class = models.ForeignKey(Class, null=True, blank=True, on_delete=models.SET_NULL)
+    TYPE_CHOICES = [
+        ('student', 'Student'),
+        ('faculty', 'Faculty'),
+    ]
+    user_type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='student')
+
+    def clean(self):
+        if self.user_type == 'faculty' and self.user_class:
+            raise ValidationError('Faculty members cannot have a class assigned.')
+
+    def __str__(self):
+        return f"{self.user.username} "
+    
+class Course(models.Model):
+    course_name= models.CharField(max_length=255, null=True, blank=True)
+    class_obj=models.ForeignKey(Class, null=True, blank=True, on_delete=models.SET_NULL)
+    teacher=models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    def __str__(self):
+        return f"{self.course_name} "
+    
+
+class Attendence(models.Model):
+    student=models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    course=models.ForeignKey(Course, null=True, blank=True, on_delete=models.SET_NULL)
+    present=models.IntegerField()
+    date=models.DateField()
+    period=models.IntegerField()
+    max_mark=models.IntegerField(null=True,blank=True)
+    def __str__(self):
+        return f"{self.student.name} "
+    
+
+
+    
